@@ -108,10 +108,24 @@ async function installSccacheMac() : Promise<void> {
 }
 
 async function installSccacheLinux() : Promise<void> {
+  let package: string;
+  let sha246: string;
+  switch (arch) {
+    case "x64":
+      package = "x86_64-unknown-linux-musl";
+      sha256 = "8c2bb0805983a6fe334fa8b5c26db2c5fc3a7fc3dbf51522a08f2e4c50e4fbe7";
+      break;
+    case "arm64":
+      package = "aarch64-unknown-linux-musl";
+      sha256 = "be501f5dc946432b429108f40385de9cb58900be27963b98491b370ab585b565";
+      break;
+    default:
+      throw new Error(`Unsupported architecture: ${process.arch}`);
+  }
   await installSccacheFromGitHub(
     "v0.7.6",
-    "x86_64-unknown-linux-musl",
-    "8c2bb0805983a6fe334fa8b5c26db2c5fc3a7fc3dbf51522a08f2e4c50e4fbe7",
+    package,
+    sha256,
     "/usr/local/bin/",
     "sccache"
   );
